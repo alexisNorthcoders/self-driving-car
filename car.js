@@ -14,6 +14,9 @@ class Car {
     this.controls = new Controls();
   }
   update() {
+    this.#move();
+  }
+  #move() {
     if (this.controls.forward) this.speed += this.acceleration;
     if (this.controls.reverse) this.speed -= this.acceleration;
     if (this.speed < -this.maxSpeed / 2) this.speed = -this.maxSpeed / 2;
