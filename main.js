@@ -13,25 +13,13 @@ if (localStorage.getItem("bestBrain")) {
   for (let i = 0; i < cars.length; i++) {
     cars[i].brain = JSON.parse(localStorage.getItem("bestBrain"));
     if (i != 0) {
-      NeuralNetwork.mutate(cars[i].brain, 0.2);
+      NeuralNetwork.mutate(cars[i].brain, 0.1);
     }
   }
 }
 let traffic = [
   new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY"),
-   new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(0), -500, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(2), -700, 30, 50, "DUMMY"), 
-  new Car(road.getLaneCenter(1), -800, 30, 50, "DUMMY"),
-  new Car(road.getLaneCenter(0), -1100, 30, 50, "DUMMY"),
- new Car(road.getLaneCenter(2), -1100, 30, 50, "DUMMY"),
- new Car(road.getLaneCenter(0), -1500, 30, 50, "DUMMY"),
- new Car(road.getLaneCenter(1), -1500, 30, 50, "DUMMY"),
- new Car(road.getLaneCenter(1), -1700, 30, 50, "DUMMY"),
- new Car(road.getLaneCenter(2), -1700, 30, 50, "DUMMY"), 
+ 
 ];
 
 let isPause = false;
@@ -52,10 +40,10 @@ function drawPause() {
 }
 function spawnTrafficCar() {
     
-  const yPos = bestCar.y -300 ;
-  const car = new Car(road.getLaneCenter(0), yPos-Math.random()*200, 30, 50, "DUMMY");
-  const car2 = new Car(road.getLaneCenter(1), yPos-Math.random()*200+200, 30, 50, "DUMMY");
-  const car3 = new Car(road.getLaneCenter(2), yPos-Math.random()*400, 30, 50, "DUMMY");
+  const yPos = bestCar.y -600 ;
+  const car = new Car(road.getLaneCenter(0), yPos-Math.random()*200-100, 30, 50, "DUMMY");
+  const car2 = new Car(road.getLaneCenter(1), yPos-Math.random()*200-400, 30, 50, "DUMMY");
+  const car3 = new Car(road.getLaneCenter(2), yPos-Math.random()*600, 30, 50, "DUMMY");
   traffic.push(car);
   traffic.push(car2);
   traffic.push(car3);
@@ -63,7 +51,7 @@ function spawnTrafficCar() {
 
 function removeOutOfViewCars() {
   if (traffic.length !== 0) traffic.forEach((car) => {
-    if (bestCar.y-car.y < -200){ 
+    if (bestCar.y-car.y < -700){ 
         console.log("here")
         traffic.shift()
 }
@@ -97,7 +85,7 @@ function generateCars(N) {
 function animate(time) {
     removeOutOfViewCars()
     console.log(traffic.length)
-    if (traffic.length <3){
+    if (traffic.length <4){
         spawnTrafficCar()
     }
     
