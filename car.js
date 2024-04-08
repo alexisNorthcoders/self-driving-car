@@ -1,5 +1,5 @@
 class Car {
-  constructor(x, y, width, height, controlType, maxSpeed = 3) {
+  constructor(x, y, width, height, controlType, maxSpeed = 3,colour="blue") {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -21,6 +21,21 @@ class Car {
 
     this.img = new Image()
     this.img.src = "car.png"
+
+    this.mask=document.createElement("canvas")
+    this.mask.width=width
+    this.mask.height=height
+
+    const maskCtx = this.mask.getContext("2d")
+    this.img.onload=() => {
+      maskCtx.fillStyle=colour
+      maskCtx.rect(0,0,this.width,this.height)
+      maskCtx.fill()
+
+      maskCtx.globalCompositeOperation="destination-atop"
+      maskCtx.drawImage(this.img,0,0,this.width,this.height)
+
+    }
 
   }
   update(roadBorders,traffic) {
@@ -96,16 +111,23 @@ class Car {
     this.x -= Math.sin(this.angle) * this.speed;
     this.y -= Math.cos(this.angle) * this.speed;
   }
-  draw(ctx,colour,drawSensor=false) {
+  draw(ctx,drawSensor=false) {
     ctx.save()
     ctx.translate(this.x,this.y)
     ctx.rotate(-this.angle)
-    ctx.drawImage(this.img,
+    ctx.drawImage(this.mask,
       -this.width/2,
       -this.height/2,
       this.width,
       this.height
       )
+      ctx.globalCompositeOperation="multiply"
+      ctx.drawImage(this.img,
+        -this.width/2,
+        -this.height/2,
+        this.width,
+        this.height
+        )
       ctx.restore()
     if (this.sensor && drawSensor){
 
