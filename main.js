@@ -6,7 +6,7 @@ networkCanvas.width = 300;
 const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
 const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
-const N = 1000;
+const N = 1;
 const cars = generateCars(N);
 let bestCar = cars[0];
 if (localStorage.getItem("bestBrain")) {
@@ -17,10 +17,7 @@ if (localStorage.getItem("bestBrain")) {
     }
   }
 }
-let traffic = [
-  new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY"),
- 
-];
+let traffic = [new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2, "red")];
 
 let isPause = false;
 function stopAnimation() {
@@ -38,25 +35,45 @@ function drawPause() {
   ctx.textBaseline = "middle";
   ctx.fillText("PAUSE", canvas.width / 2, canvas.height / 2);
 }
+function getRandomColour() {
+  const colours = [
+    "yellow",
+    "red",
+    "green",
+    "gray",
+    "brown",
+    "purple",
+    "cyan",
+    "white",
+    "pink",
+  ];
+  return colours[Math.floor(Math.random() * colours.length)];
+}
 function spawnTrafficCar() {
-    
-  const yPos = bestCar.y -600 ;
-  const car = new Car(road.getLaneCenter(0), yPos-Math.random()*200-100, 30, 50, "DUMMY");
-  const car2 = new Car(road.getLaneCenter(1), yPos-Math.random()*200-400, 30, 50, "DUMMY");
-  const car3 = new Car(road.getLaneCenter(2), yPos-Math.random()*600, 30, 50, "DUMMY");
-  traffic.push(car);
-  traffic.push(car2);
-  traffic.push(car3);
+    let yPos = bestCar.y - 600;
+  for (let i = 0; i < 5; i++) {
+    const randomLane = Math.floor(Math.random() * 3);
+    const car = new Car(
+      road.getLaneCenter(randomLane),
+      yPos - Math.random() * 200 - 100,
+      30,
+      50,
+      "DUMMY",
+      2,
+      getRandomColour()
+    );
+    traffic.push(car);
+    yPos-=100
+  }
 }
 
 function removeOutOfViewCars() {
-  if (traffic.length !== 0) traffic.forEach((car) => {
-    if (bestCar.y-car.y < -700){ 
-        console.log("here")
-        traffic.shift()
-}
-
-  });
+  if (traffic.length !== 0)
+    traffic.forEach((car) => {
+      if (bestCar.y - car.y < -600) {
+        traffic.shift();
+      }
+    });
 }
 document.addEventListener("keydown", (event) => {
   if (event.key === "s") {
@@ -83,12 +100,12 @@ function generateCars(N) {
 }
 
 function animate(time) {
-    removeOutOfViewCars()
-    console.log(traffic.length)
-    if (traffic.length <4){
-        spawnTrafficCar()
-    }
-    
+  removeOutOfViewCars();
+
+  if (traffic.length < 2) {
+    spawnTrafficCar();
+  }
+
   for (let i = 0; i < traffic.length; i++) {
     traffic[i].update(road.borders, []);
   }
@@ -111,12 +128,12 @@ function animate(time) {
   }
   carCtx.globalAlpha = 1;
   bestCar.draw(carCtx, true);
-  
+
   carCtx.restore();
 
   networkCtx.lineDashOffset = -time / 50;
   Visualizer.drawNetwork(networkCtx, bestCar.brain);
-  
+
   animationFrameId = requestAnimationFrame(animate);
 }
 
