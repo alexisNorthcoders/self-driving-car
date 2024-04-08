@@ -35,7 +35,12 @@ document.addEventListener("keydown", (event) => {
   }
 });
 animate();
-
+function save(){
+    localStorage.setItem("bestBrain",JSON.stringify(bestCar.brain))
+}
+function discard(){
+    localStorage.removeItem("bestBrain")
+}
 function generateCars(N) {
   const cars = [];
   for (let i = 1; i <= N; i++) {
