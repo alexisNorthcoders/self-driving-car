@@ -6,14 +6,14 @@ networkCanvas.width = 300;
 const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
 const road = new Road(carCanvas.width / 2, carCanvas.width * 0.9);
-const N = 1;
+const N = 1000;
 const cars = generateCars(N);
 let bestCar = cars[0];
 if (localStorage.getItem("bestBrain")) {
   for (let i = 0; i < cars.length; i++) {
     cars[i].brain = JSON.parse(localStorage.getItem("bestBrain"));
     if (i != 0) {
-      NeuralNetwork.mutate(cars[i].brain, 0.1);
+      NeuralNetwork.mutate(cars[i].brain, 0.2);
     }
   }
 }
@@ -28,42 +28,30 @@ function drawPause() {
   isPause = true;
   const canvas = document.getElementById("carCanvas");
   const ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 300, canvas.width, 100);
-  ctx.fillStyle = "rgba(0,0,0,1)";
+
   ctx.font = "48px sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("PAUSE", canvas.width / 2, canvas.height / 2);
+  ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2);
 }
-function getRandomColour() {
-  const colours = [
-    "yellow",
-    "red",
-    "green",
-    "gray",
-    "brown",
-    "purple",
-    "cyan",
-    "white",
-    "pink",
-  ];
-  return colours[Math.floor(Math.random() * colours.length)];
-}
+
 function spawnTrafficCar() {
-    let yPos = bestCar.y - 600;
-  for (let i = 0; i < 5; i++) {
-    const randomLane = Math.floor(Math.random() * 3);
-    const car = new Car(
-      road.getLaneCenter(randomLane),
-      yPos - Math.random() * 200 - 100,
-      30,
-      50,
-      "DUMMY",
-      2,
-      getRandomColour()
-    );
-    traffic.push(car);
-    yPos-=100
+  let yPos = bestCar.y - 600;
+  while (traffic.length < 10) {
+    for (let i = 0; i < 10; i++) {
+      const randomLane = Math.floor(Math.random() * 3);
+      const car = new Car(
+        road.getLaneCenter(randomLane),
+        yPos,
+        30,
+        50,
+        "DUMMY",
+        2,
+        getRandomColour()
+      );
+      traffic.push(car);
+      yPos -= 100;
+    }
   }
 }
 
@@ -75,6 +63,7 @@ function removeOutOfViewCars() {
       }
     });
 }
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "s") {
     stopAnimation();
@@ -91,6 +80,14 @@ function save() {
 function discard() {
   localStorage.removeItem("bestBrain");
 }
+function increaseAICarSpeed() {
+  Car.increaseMaxSpeed();
+  console.log(bestCar.maxSpeed);
+}
+function decreaseAICarSpeed() {
+  Car.decreaseMaxSpeed();
+  console.log(bestCar.maxSpeed);
+}
 function generateCars(N) {
   const cars = [];
   for (let i = 1; i <= N; i++) {
@@ -101,10 +98,8 @@ function generateCars(N) {
 
 function animate(time) {
   removeOutOfViewCars();
-
-  if (traffic.length < 2) {
-    spawnTrafficCar();
-  }
+ 
+  spawnTrafficCar();
 
   for (let i = 0; i < traffic.length; i++) {
     traffic[i].update(road.borders, []);
@@ -136,5 +131,3 @@ function animate(time) {
 
   animationFrameId = requestAnimationFrame(animate);
 }
-
-//setInterval(spawnTrafficCar, 5000);

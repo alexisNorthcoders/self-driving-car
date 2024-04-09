@@ -1,4 +1,5 @@
 class Car {
+  static AICars = [];
   constructor(x, y, width, height, controlType, maxSpeed = 3, colour = "blue") {
     this.x = x;
     this.y = y;
@@ -34,6 +35,9 @@ class Car {
 
       maskCtx.globalCompositeOperation = "destination-atop";
       maskCtx.drawImage(this.img, 0, 0, this.width, this.height);
+      if (controlType === "AI"){
+        Car.AICars.push(this)}
+      
     };
   }
   update(roadBorders, traffic) {
@@ -135,5 +139,15 @@ class Car {
     );
     ctx.restore();
    
+  }
+  static increaseMaxSpeed(){
+    for (let car of Car.AICars) {
+      car.maxSpeed++
+    }
+  }
+  static decreaseMaxSpeed(){
+    for (let car of Car.AICars) {
+      car.maxSpeed--
+    }
   }
 }
