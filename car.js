@@ -35,8 +35,8 @@ class Car {
 
       maskCtx.globalCompositeOperation = "destination-atop";
       maskCtx.drawImage(this.img, 0, 0, this.width, this.height);
-      if (controlType === "AI"){
-        Car.AICars.push(this)}
+ /*      if (controlType === "AI"){
+        Car.AICars.push(this)} */
       
     };
   }

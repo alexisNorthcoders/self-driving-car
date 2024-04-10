@@ -7,16 +7,97 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="carCanvas"></canvas>
-    <div id="verticalButtons">
-        <button onclick="save()">💾</button>
-        <button onclick="discard()">🗑️</button>
-        <button onclick="increaseAICarSpeed()">+</button>
-        <button onclick="decreaseAICarSpeed()">-</button>
+    
 
+
+<div id="instructionsModal" class="modal">
+ 
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h1>Neural Network Car Game Tutorial</h1>
+
+    <p>Welcome to the Neural Network Car Game! In this game, you'll be teaching cars to navigate through traffic using neural networks. Let's dive into how to play:</p>
+    
+    <h2>Game Controls:</h2>
+    <ul>
+      <li><strong>Max Speed:</strong> Set the maximum speed for the cars. This determines how fast the cars can move.</li>
+      <li><strong>Number of Cars:</strong> Choose the number of cars in the simulation. We recommend starting with 100 cars for optimal performance. The more cars you use, the better your chances are of finding the ideal one.</li>
+      <li><strong>Brain Mutation:</strong> Adjust the mutation rate of the car brains. This determines how much the brains of the cars mutate from the current best car. Increase or decrease to adjust the randomness of your cars brains.</li>
+      <li><strong>Restart:</strong> Press the "Restart" button to start a new run with the selected input values (or default values if none selected).</li>
+      <li><strong>Save:</strong> Save the best car from the current run. This car's brain will be used as the starting point for the next run.</li>
+      <li><strong>Delete:</strong> Delete the saved car and start fresh with a new run.</li>
+      <li><strong>Benchmark:</strong> Test the saved car's performance by recording the highest distance it achieves.</li>
+    </ul>
+    
+    <h2>Game Objective:</h2>
+    <p>The goal of the game is to teach cars to avoid traffic for as long as possible. Each run ends when a car hits the traffic or goes outside the road. Your challenge is to optimize the car's behavior using neural networks to achieve the highest distance possible.</p>
+    
+    <h2>Game Mechanics:</h2>
+    <ul>
+      <li><strong>Starting a New Run:</strong> Press the "Restart" button to start a new run with the selected input values. The simulation will begin with the specified number of cars, each controlled by a neural network.</li>
+      <li><strong>Highlighting the Best Car:</strong> During the simulation, the game will highlight the "best car," which is the car that has traveled the farthest distance without crashing into traffic or going off the road.</li>
+      <li><strong>Saving the Best Car:</strong> If you're satisfied with the performance of the best car, press the "Save" button to store its brain for the next run. This car's brain will serve as the starting point for the next run, allowing for further optimization. Sometimes you have to be quick to Save the car you want.</li>
+      <li><strong>Deleting the Saved Car:</strong> If you want to start fresh without using the saved car's brain, press the "Delete" button to remove it from the storage.</li>
+      <li><strong>Benchmarking Performance:</strong> Use the "Benchmark" button to test the saved car's performance. The game will record the highest distance achieved by the saved car, providing valuable insights into its capabilities.</li>
+    </ul>
+    <h2>About the Neural Network:</h2>
+    <p>The neural network in this game comprises several layers that process inputs from sensors installed in the cars. These sensors detect the environment around the car, including traffic and road boundaries.</p>
+
+   <ul>
+      <li>The bottom layer of the neural network illustrates the inputs as yellow circles, representing the sensors.</li>
+      <li>Each sensor detects objects in its vicinity, with transparency indicating no detection and intensity increasing based on the proximity of objects.</li>
+    </ul>
+
+
+    <ul>
+      <li>The middle layer represents the biases of the neural network.</li>
+      <li>These biases help adjust the network's calculations and decision-making process.</li>
+    </ul>
+
+    <ul>
+      <li>The top layer of the neural network represents the outputs, which control the car's movement.</li>
+      <li>These outputs determine actions such moving forward, reverse, turning left or right.</li>
+    </ul>
+
+    <p>By adjusting the input values and mutation rate, you can optimize the neural network's performance and teach the cars to navigate more effectively.</p>
+  
+    
+    <h2>Tips for Success:</h2>
+    <ul>
+      <li>Experiment with different combinations of input values to find the optimal settings for your cars.</li>
+      <li>Pay attention to the behavior of the best car and adjust the mutation rate accordingly to encourage further improvement. Increase the mutation if the cars are not "improving" or decrease the mutation if you are happy with how your car is performing.</li>
+      <li>Keep practicing and refining your strategies to achieve the highest distances in each run.</li>
+    </ul>
+    
+    <p>That's it! You're now ready to dive into the Neural Network Car Game. Have fun and happy teaching!</p>
+
+    <h2> This game was built by following along with <a href="https://www.youtube.com/@Radu " target="_blank">Radu</a>'s Self-Driving-Car project and modifying it to be more interactive. Highly recommend watching it if you're interested in learning how Neural Networks work.</p>
+    
+  </div>
+</div>
+    <div id="verticalButtons">
+        <button id="instructionsButton">Instructions</button>
+        <div id="highScoreDisplay">High Score: <span id="highScoreValue"></span></div>
+        <button id="start" onclick="start()" title="Start a new run" >Restart</button>
+        <button id="start" onclick="record()" title="Start a new run" >Benchmark</button>
+        <button id="carbrain" onclick="save()" title="Save brain of current car">💾</button>
+        <button onclick="discard()" title="Delete car brain in storage">🗑️</button>
+        <!-- <button onclick="increaseAICarSpeed()" title="Increase current max speed">+</button>
+        <button onclick="decreaseAICarSpeed()" title="Decrease current max speed">-</button> -->
+        <button id="reset" onclick="resetValues()" title="Reset settings values" >Reset</button>
+        <label for="maxSpeed">Max speed</label>
+        <input type="number" id="maxSpeed" value="5"/>
+        <label for="AIcarsNumber">Number of cars</label>
+        <input type="number" id="AIcarsNumber" value="100"/>
+        <label for="brainMutation">Brain mutation (%)</label>
+        <input type="number" id="brainMutation" value="10"/>
+      
     </div>
+    <canvas id="carCanvas"></canvas>
+
     <canvas id="networkCanvas"></canvas>
     <script src="visualizer.js"></script>
+    <script src="modal.js"></script>
     <script src="network.js"></script>
     <script src="sensor.js"></script>
     <script src="utils.js"></script>
