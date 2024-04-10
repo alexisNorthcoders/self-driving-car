@@ -57,7 +57,7 @@ function showDistance() {
   const distance = Math.floor(Math.abs(bestCar.y)) + "m";
 
   ctx.fillStyle = "gray";
-  ctx.rect(canvas.width / 2 - road.x, canvas.height * 0.06, 200, 50);
+  ctx.rect(canvas.width / 2 - road.x, canvas.height * 0.06, 200, 60);
   ctx.fill();
   ctx.fillStyle = "white";
   ctx.font = "48px sans-serif";
